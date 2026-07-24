@@ -28,5 +28,6 @@ Route::post('/logout', [StaticLoginController::class, 'destroy'])
 
 Route::middleware('static.auth')->group(function () {
     Route::get('/lotti', [LotController::class, 'edit'])->name('lots.edit');
+    Route::get('/lotti/ricetta', [LotController::class, 'currentRecipe'])->name('lots.current-recipe');
     Route::post('/lotti', [LotController::class, 'update'])->name('lots.update');
 });

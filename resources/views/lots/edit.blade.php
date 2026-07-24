@@ -51,6 +51,11 @@
             </div>
         @endif
 
+        <div id="current-recipe" class="alert alert-info d-none align-items-center gap-2 border-0 shadow-sm" role="status">
+            <i class="bi bi-info-circle-fill"></i>
+            <span>La ricetta attualmente settata è <strong id="current-recipe-value"></strong>.</span>
+        </div>
+
         <section class="card">
             <div class="card-body p-4 p-md-5">
                 <form method="POST" action="{{ route('lots.update') }}">
@@ -61,7 +66,7 @@
                             <label for="lot_number" class="form-label fw-semibold">Lotto</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white text-secondary"><i class="bi bi-upc-scan"></i></span>
-                                <input id="lot_number" name="lot_number" type="text" class="form-control @error('lot_number') is-invalid @enderror" value="{{ old('lot_number') }}" required autofocus placeholder="Es. LOT-001">
+                                <input id="lot_number" name="lot_number" type="text" class="form-control @error('lot_number') is-invalid @enderror" value="{{ old('lot_number') }}" required autofocus placeholder="Es. LOT-001" data-recipe-url="{{ route('lots.current-recipe') }}">
                                 @error('lot_number')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -91,5 +96,40 @@
             </div>
         </section>
     </main>
+    <script>
+        const lotInput = document.getElementById('lot_number');
+        const recipeAlert = document.getElementById('current-recipe');
+        const recipeValue = document.getElementById('current-recipe-value');
+
+        async function loadCurrentRecipe() {
+            const lotNumber = lotInput.value.trim();
+
+            recipeAlert.classList.add('d-none');
+            recipeAlert.classList.remove('d-flex');
+
+            if (!lotNumber) {
+                return;
+            }
+
+            const response = await fetch(`${lotInput.dataset.recipeUrl}?lot_number=${encodeURIComponent(lotNumber)}`, {
+                headers: {'Accept': 'application/json'},
+            });
+
+            if (!response.ok) {
+                return;
+            }
+
+            const data = await response.json();
+
+            if (data.recipe) {
+                recipeValue.textContent = data.recipe;
+                recipeAlert.classList.remove('d-none');
+                recipeAlert.classList.add('d-flex');
+            }
+        }
+
+        lotInput.addEventListener('change', loadCurrentRecipe);
+        lotInput.addEventListener('blur', loadCurrentRecipe);
+    </script>
 </body>
 </html>

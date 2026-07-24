@@ -86,4 +86,26 @@ class LotUpdateTest extends TestCase
 
         $this->assertDatabaseCount('impegnolotti', 0);
     }
+
+    public function test_current_recipe_is_returned_only_when_it_is_set(): void
+    {
+        DB::table('impegnolotti')->insert([
+            'DBlotto' => 'LOT-WITH-RECIPE',
+            'DBmodelli' => 'internorid.ciff',
+        ]);
+        DB::table('impegnolotti')->insert([
+            'DBlotto' => 'LOT-WITHOUT-RECIPE',
+            'DBmodelli' => '',
+        ]);
+
+        $this->withSession(['set_modelli_user' => ['username' => 'admin.liof']])
+            ->getJson('/lotti/ricetta?lot_number=LOT-WITH-RECIPE')
+            ->assertOk()
+            ->assertExactJson(['recipe' => 'internorid.ciff']);
+
+        $this->withSession(['set_modelli_user' => ['username' => 'admin.liof']])
+            ->getJson('/lotti/ricetta?lot_number=LOT-WITHOUT-RECIPE')
+            ->assertOk()
+            ->assertExactJson(['recipe' => null]);
+    }
 }
