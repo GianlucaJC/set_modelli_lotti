@@ -27,9 +27,15 @@ class LotController extends Controller
             'ciff_model' => ['required', 'in:'.implode(',', self::CIFF_MODELS)],
         ]);
 
+        $username = (string) $request->session()->get('set_modelli_user.username');
+        $setBy = substr($username, 0, 14).' '.now()->format('H:i');
+
         $updatedLots = DB::table('impegnolotti')
             ->where('DBlotto', $data['lot_number'])
-            ->update(['DBmodelli' => $data['ciff_model']]);
+            ->update([
+                'DBmodelli' => $data['ciff_model'],
+                'set_db_modelli' => $setBy,
+            ]);
 
         if ($updatedLots === 0) {
             return back()

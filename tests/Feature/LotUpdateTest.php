@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -18,11 +19,14 @@ class LotUpdateTest extends TestCase
         Schema::create('impegnolotti', function ($table) {
             $table->string('DBlotto', 20);
             $table->string('DBmodelli', 50)->nullable();
+            $table->string('set_db_modelli', 20)->nullable();
         });
     }
 
     public function test_logged_in_user_can_set_the_ciff_model_for_a_lot(): void
     {
+        $this->travelTo(Carbon::parse('2026-07-24 14:30:00', 'Europe/Rome'));
+
         DB::table('impegnolotti')->insert([
             'DBlotto' => 'LOT-001',
         ]);
@@ -37,11 +41,14 @@ class LotUpdateTest extends TestCase
         $this->assertDatabaseHas('impegnolotti', [
             'DBlotto' => 'LOT-001',
             'DBmodelli' => 'internorid.ciff',
+            'set_db_modelli' => 'admin.liof 14:30',
         ]);
     }
 
     public function test_setting_a_lot_again_updates_its_model(): void
     {
+        $this->travelTo(Carbon::parse('2026-07-24 14:30:00', 'Europe/Rome'));
+
         DB::table('impegnolotti')->insert([
             'DBlotto' => 'LOT-001',
             'DBmodelli' => 'internorid.ciff',
@@ -58,10 +65,14 @@ class LotUpdateTest extends TestCase
             ]);
 
         $this->assertDatabaseCount('impegnolotti', 2);
-            $this->assertSame(2, DB::table('impegnolotti')
-                ->where('DBlotto', 'LOT-001')
-                ->where('DBmodelli', 'enteropluri.ciff')
-                ->count());
+        $this->assertSame(2, DB::table('impegnolotti')
+            ->where('DBlotto', 'LOT-001')
+            ->where('DBmodelli', 'enteropluri.ciff')
+            ->count());
+        $this->assertSame(2, DB::table('impegnolotti')
+            ->where('DBlotto', 'LOT-001')
+            ->where('set_db_modelli', 'admin.liof 14:30')
+            ->count());
     }
 
     public function test_unknown_lot_is_not_created(): void
