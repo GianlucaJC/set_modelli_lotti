@@ -77,8 +77,8 @@
                             <label for="ciff_model" class="form-label fw-semibold">DBmodelli</label>
                             <select id="ciff_model" name="ciff_model" class="form-select @error('ciff_model') is-invalid @enderror" required>
                                 <option value="">Seleziona un modello</option>
-                                @foreach ($ciffModels as $ciffModel)
-                                    <option value="{{ $ciffModel }}" @selected(old('ciff_model') === $ciffModel)>{{ $ciffModel }}</option>
+                                @foreach ($ciffModels as $ciffModel => $label)
+                                    <option value="{{ $ciffModel }}" @selected(old('ciff_model') === $ciffModel)>{{ $label }}</option>
                                 @endforeach
                             </select>
                             @error('ciff_model')

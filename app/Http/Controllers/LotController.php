@@ -11,9 +11,8 @@ use Illuminate\View\View;
 class LotController extends Controller
 {
     private const CIFF_MODELS = [
-        'internorid.ciff',
-        'esterno rid.ciff',
-        'enteropluri.ciff',
+        'PiastraRID.ciff' => 'EasyRID Piastra',
+        'BustaRID.cif' => 'EasyRID Busta',
     ];
 
     public function edit(): View
@@ -40,7 +39,7 @@ class LotController extends Controller
     {
         $data = $request->validate([
             'lot_number' => ['required', 'string', 'max:255'],
-            'ciff_model' => ['required', 'in:'.implode(',', self::CIFF_MODELS)],
+            'ciff_model' => ['required', 'in:'.implode(',', array_keys(self::CIFF_MODELS))],
         ]);
 
         $username = (string) $request->session()->get('set_modelli_user.username');

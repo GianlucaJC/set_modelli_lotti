@@ -34,13 +34,13 @@ class LotUpdateTest extends TestCase
         $this->withSession(['set_modelli_user' => ['username' => 'admin.liof']])
             ->post('/lotti', [
                 'lot_number' => 'LOT-001',
-                'ciff_model' => 'internorid.ciff',
+                'ciff_model' => 'PiastraRID.ciff',
             ])
             ->assertRedirect('/lotti');
 
         $this->assertDatabaseHas('impegnolotti', [
             'DBlotto' => 'LOT-001',
-            'DBmodelli' => 'internorid.ciff',
+            'DBmodelli' => 'PiastraRID.ciff',
             'set_db_modelli' => 'admin.liof 14:30',
         ]);
     }
@@ -51,7 +51,7 @@ class LotUpdateTest extends TestCase
 
         DB::table('impegnolotti')->insert([
             'DBlotto' => 'LOT-001',
-            'DBmodelli' => 'internorid.ciff',
+            'DBmodelli' => 'PiastraRID.ciff',
         ]);
         DB::table('impegnolotti')->insert([
             'DBlotto' => 'LOT-001',
@@ -61,13 +61,13 @@ class LotUpdateTest extends TestCase
         $this->withSession(['set_modelli_user' => ['username' => 'admin.liof']])
             ->post('/lotti', [
                 'lot_number' => 'LOT-001',
-                'ciff_model' => 'enteropluri.ciff',
+                'ciff_model' => 'BustaRID.cif',
             ]);
 
         $this->assertDatabaseCount('impegnolotti', 2);
         $this->assertSame(2, DB::table('impegnolotti')
             ->where('DBlotto', 'LOT-001')
-            ->where('DBmodelli', 'enteropluri.ciff')
+            ->where('DBmodelli', 'BustaRID.cif')
             ->count());
         $this->assertSame(2, DB::table('impegnolotti')
             ->where('DBlotto', 'LOT-001')
@@ -80,7 +80,7 @@ class LotUpdateTest extends TestCase
         $this->withSession(['set_modelli_user' => ['username' => 'admin.liof']])
             ->post('/lotti', [
                 'lot_number' => 'MISSING-LOT',
-                'ciff_model' => 'internorid.ciff',
+                'ciff_model' => 'PiastraRID.ciff',
             ])
             ->assertSessionHasErrors('lot_number');
 
@@ -91,7 +91,7 @@ class LotUpdateTest extends TestCase
     {
         DB::table('impegnolotti')->insert([
             'DBlotto' => 'LOT-WITH-RECIPE',
-            'DBmodelli' => 'internorid.ciff',
+            'DBmodelli' => 'PiastraRID.ciff',
         ]);
         DB::table('impegnolotti')->insert([
             'DBlotto' => 'LOT-WITHOUT-RECIPE',
@@ -101,7 +101,7 @@ class LotUpdateTest extends TestCase
         $this->withSession(['set_modelli_user' => ['username' => 'admin.liof']])
             ->getJson('/lotti/ricetta?lot_number=LOT-WITH-RECIPE')
             ->assertOk()
-            ->assertExactJson(['recipe' => 'internorid.ciff']);
+            ->assertExactJson(['recipe' => 'PiastraRID.ciff']);
 
         $this->withSession(['set_modelli_user' => ['username' => 'admin.liof']])
             ->getJson('/lotti/ricetta?lot_number=LOT-WITHOUT-RECIPE')
