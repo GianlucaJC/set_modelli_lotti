@@ -61,13 +61,13 @@ class LotUpdateTest extends TestCase
         $this->withSession(['set_modelli_user' => ['username' => 'admin.liof']])
             ->post('/lotti', [
                 'lot_number' => 'LOT-001',
-                'ciff_model' => 'BustaRID.cif',
+                'ciff_model' => 'BustaRID_CODE.ciff',
             ]);
 
         $this->assertDatabaseCount('impegnolotti', 2);
         $this->assertSame(2, DB::table('impegnolotti')
             ->where('DBlotto', 'LOT-001')
-            ->where('DBmodelli', 'BustaRID.cif')
+            ->where('DBmodelli', 'BustaRID_CODE.ciff')
             ->count());
         $this->assertSame(2, DB::table('impegnolotti')
             ->where('DBlotto', 'LOT-001')
