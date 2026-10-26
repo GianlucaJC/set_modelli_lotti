@@ -15,6 +15,7 @@ class LotController extends Controller
         'BustaRID.cif' => 'EasyRID Busta',
         'PiastraRID_CODE.ciff' => 'EasyRID Piastra (with CODE)',
         'BustaRID_CODE.ciff' => 'EasyRID Busta (with CODE)',
+        'PiastraMultiRID.ciff' => 'Multi RID',
     ];
 
     public function edit(): View
@@ -30,9 +31,9 @@ class LotController extends Controller
 
         $recipe = DB::table('impegnolotti')
             ->where('DBlotto', $data['lot_number'])
-            ->whereNotNull('DBmodelli')
-            ->whereRaw('TRIM(DBmodelli) <> ?', [''])
-            ->value('DBmodelli');
+            ->whereNotNull('DBmodelli1')
+            ->whereRaw('TRIM(DBmodelli1) <> ?', [''])
+            ->value('DBmodelli1');
 
         return response()->json(['recipe' => $recipe]);
     }
@@ -50,7 +51,7 @@ class LotController extends Controller
         $updatedLots = DB::table('impegnolotti')
             ->where('DBlotto', $data['lot_number'])
             ->update([
-                'DBmodelli' => $data['ciff_model'],
+                'DBmodelli1' => $data['ciff_model'],
                 'set_db_modelli' => $setBy,
             ]);
 

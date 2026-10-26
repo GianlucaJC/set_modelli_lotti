@@ -18,7 +18,7 @@ class LotUpdateTest extends TestCase
 
         Schema::create('impegnolotti', function ($table) {
             $table->string('DBlotto', 20);
-            $table->string('DBmodelli', 50)->nullable();
+            $table->string('DBmodelli1', 50)->nullable();
             $table->string('set_db_modelli', 20)->nullable();
         });
     }
@@ -40,7 +40,7 @@ class LotUpdateTest extends TestCase
 
         $this->assertDatabaseHas('impegnolotti', [
             'DBlotto' => 'LOT-001',
-            'DBmodelli' => 'PiastraRID.ciff',
+            'DBmodelli1' => 'PiastraRID.ciff',
             'set_db_modelli' => 'admin.liof 14:30',
         ]);
     }
@@ -51,11 +51,11 @@ class LotUpdateTest extends TestCase
 
         DB::table('impegnolotti')->insert([
             'DBlotto' => 'LOT-001',
-            'DBmodelli' => 'PiastraRID.ciff',
+            'DBmodelli1' => 'PiastraRID.ciff',
         ]);
         DB::table('impegnolotti')->insert([
             'DBlotto' => 'LOT-001',
-            'DBmodelli' => null,
+            'DBmodelli1' => null,
         ]);
 
         $this->withSession(['set_modelli_user' => ['username' => 'admin.liof']])
@@ -67,7 +67,7 @@ class LotUpdateTest extends TestCase
         $this->assertDatabaseCount('impegnolotti', 2);
         $this->assertSame(2, DB::table('impegnolotti')
             ->where('DBlotto', 'LOT-001')
-            ->where('DBmodelli', 'BustaRID_CODE.ciff')
+            ->where('DBmodelli1', 'BustaRID_CODE.ciff')
             ->count());
         $this->assertSame(2, DB::table('impegnolotti')
             ->where('DBlotto', 'LOT-001')
@@ -91,11 +91,11 @@ class LotUpdateTest extends TestCase
     {
         DB::table('impegnolotti')->insert([
             'DBlotto' => 'LOT-WITH-RECIPE',
-            'DBmodelli' => 'PiastraRID.ciff',
+            'DBmodelli1' => 'PiastraRID.ciff',
         ]);
         DB::table('impegnolotti')->insert([
             'DBlotto' => 'LOT-WITHOUT-RECIPE',
-            'DBmodelli' => '',
+            'DBmodelli1' => '',
         ]);
 
         $this->withSession(['set_modelli_user' => ['username' => 'admin.liof']])
