@@ -87,6 +87,19 @@ class LotUpdateTest extends TestCase
         $this->assertDatabaseCount('impegnolotti', 0);
     }
 
+    public function test_ciff_options_show_the_multiplate_models_and_hide_removed_options(): void
+    {
+        $this->withSession(['set_modelli_user' => ['username' => 'admin.liof']])
+            ->get('/lotti')
+            ->assertOk()
+            ->assertSee('PiastraMultiRID.ciff')
+            ->assertSee('MULTIPLATE Piastra')
+            ->assertSee('BustaMultiRID.ciff')
+            ->assertSee('Multiplate BUSTA (with CODE)')
+            ->assertDontSee('BustaRID.cif')
+            ->assertDontSee('PiastraRID_CODE.ciff');
+    }
+
     public function test_current_recipe_is_returned_only_when_it_is_set(): void
     {
         DB::table('impegnolotti')->insert([

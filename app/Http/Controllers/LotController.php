@@ -12,10 +12,9 @@ class LotController extends Controller
 {
     private const CIFF_MODELS = [
         'PiastraRID.ciff' => 'EasyRID Piastra',
-        'BustaRID.cif' => 'EasyRID Busta',
-        'PiastraRID_CODE.ciff' => 'EasyRID Piastra (with CODE)',
         'BustaRID_CODE.ciff' => 'EasyRID Busta (with CODE)',
-        'PiastraMultiRID.ciff' => 'Multi RID',
+        'PiastraMultiRID.ciff' => 'MULTIPLATE Piastra',
+        'BustaMultiRID.ciff' => 'Multiplate BUSTA (with CODE)',
     ];
 
     public function edit(): View
